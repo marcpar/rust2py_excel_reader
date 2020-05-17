@@ -58,7 +58,7 @@ Image of excel below
 ```python
 import reader
 
-print reader.excel_reader(absolute)
+print reader.excel_reader("change absolute path")
 ```
 
 ## Contributing
