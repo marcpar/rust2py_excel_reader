@@ -1,32 +1,28 @@
-extern crate cpython;
-use cpython::*;
+use calamine::{open_workbook, Reader, Xlsx};
+use cpython::{py_fn, py_module_initializer, PyDict, PyResult, Python};
 
-use std::cell::RefCell;
-use std::collections::HashSet;
-
-type Inner = HashSet<u32>;
-
-py_class!(class RustSet |py| {
-    data hs: RefCell<Inner>;
-
-    def __new__(_cls) -> PyResult<RustSet> {
-        Self::create_instance(py, RefCell::new(Inner::new()))
-    }
-
-    def __contains__(&self, v: u32) -> PyResult<bool> {
-        Ok(self.hs(py).borrow().contains(&v))
-    }
-
-    def add(&self, v: u32) -> PyResult<PyObject> {
-        self.borrow_mut(py)?.insert(v);
-        Ok(py.None())
-    }
-
-    def extend(&self, iterable: &PyObject) -> PyResult<PyObject> {
-        let mut hs = self.hs(py).borrow_mut(py)?;
-        for vobj in iterable.iter(py)? {
-            hs.insert(vobj?.extract::<u32>(py)?);
-        }
-        Ok(py.None())
-    }
+// add bindings to the generated python module
+// N.B: names: "rust2py" must be the name of the `.so` or `.pyd` file
+py_module_initializer!(rust2py, |py, m| {
+    m.add(py, "__doc__", "This module is implemented in Rust.")?;
+    m.add(
+        py,
+        "excel_reader",
+        py_fn!(py, excel_reader_py(path: String)),
+    )?;
+    Ok(())
 });
+
+//TODO: GET PATH
+fn excel_reader_py(py: Python, path: String) -> PyResult<PyDict> {
+    println!("{}", path);
+    let mut excel: Xlsx<_> = open_workbook(path).unwrap();
+    let mut pydict = PyDict::new(py);
+    if let Some(Ok(r)) = excel.worksheet_range("Sheet1") {
+        for row in r.rows() {
+            pydict.set_item(py, key: K, value: V);
+            println!("row={:?}, row[0]={:?}", row, row[0]);
+        }
+    }
+    pydict
+}

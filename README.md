@@ -51,6 +51,10 @@ cargo build --release
 
 ## Usage
 
+Image of excel below
+
+![Excel Images](https://github.com/marcpar/rust2py_excel_reader/test.png)
+
 ```python
 import reader
 
