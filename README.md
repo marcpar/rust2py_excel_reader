@@ -7,6 +7,7 @@ Read excel file (xlsx) currently working on python3 using cpython binding.
    - python3
    - cargo
    - rust
+   - cpython
 
 
 ## Build 
@@ -55,10 +56,23 @@ Image of excel below
 
 ![Excel Images](https://github.com/marcpar/rust2py_excel_reader/blob/master/test.png)
 
-```python
-import reader
+Result
 
-print reader.excel_reader(absolute)
+```json
+{0: [{'SKU': 'MP13-0001', 'Product Designation': 'Mac book Pro 13"', 'Unit Price': '1299'}], 1: [{'SKU': 'MP16-0001', 'Product Designation': 'Mac book Pro 16"', 'Unit Price': '1599'}], 2: [{'SKU': 'IPX-0001', 'Product Designation': 'IPhone X', 'Unit Price': '1199'}]}
+```
+
+## running test
+
+build program
+
+```bash
+python3 ./tests/test_reader.py
+```
+
+```python3
+import rust2py
+rust2py.excel_reader("../sample.xlsx")
 ```
 
 ## Contributing

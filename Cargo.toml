@@ -18,6 +18,3 @@ features = ["extension-module"]
 name = "rust2py"
 crate-type = ["dylib"]
 
-[[bin]]
-name =  "mybin"
-path = "src/bin.rs"
